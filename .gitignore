@@ -1,0 +1,91 @@
+############################
+#     .NET / C# 
+############################
+
+# Build
+bin/
+obj/
+out/
+
+# VS files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Logs
+*.log
+
+# EF Core
+#migrations geradas automaticamente podem ficar, mas se quiser ignorar:
+# **/Migrations/*Designer.cs
+# **/Migrations/*.Snapshot.cs
+
+# Publish result
+publish/
+*.db
+
+# Environment
+appsettings.Development.json
+appsettings.Local.json
+
+# Rider IDE
+.idea/
+*.DotSettings.user
+
+############################
+#     ANGULAR / NODE
+############################
+
+# dependencies
+node_modules/
+
+# build
+dist/
+dist-ssr/
+out-tsc/
+
+# IDE files
+.vscode/
+*.code-workspace
+
+# Angular cache
+.angular/
+.angular/cache/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env
+.env
+.env.*.local
+
+############################
+#     OS / GENERAL
+############################
+
+# Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Mac
+.DS_Store
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.orig
+
+############################
+#     PACKAGE MANAGERS LOCK
+############################
+
+# Se quiser manter, remova essas linhas
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
