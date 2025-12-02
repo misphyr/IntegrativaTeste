@@ -23,7 +23,7 @@ import { ProcessoStatusPipe } from '../../../pipes/processo-status.pipe';
           <label class="block text-gray-700 font-semibold mb-2">Filtrar por Status</label>
           <select [(ngModel)]="filterStatusValue"
             class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none bg-no-repeat bg-right"
-            style="padding-right: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg fill=%23666 viewBox=%270 0 20 20%27 xmlns=%27http://www.w3.org/2000/svg%27><path d=%27M9.293 12.95a1 1 0 1.414 1.414l-4-4a1 1 0 0 1 0-1.414l4-4a1 1 0 1.414 1.414L5.414 9z%27/></svg>')"
+            style="padding-right: 2.5rem;"
             (change)="filterStatusChange.emit(filterStatusValue)">
             <option [ngValue]="null">Todos os Status</option>
             <option *ngFor="let status of statusOptions" [ngValue]="status">
