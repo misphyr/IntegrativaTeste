@@ -33,8 +33,29 @@ namespace Api.Controllers
         public async Task<IActionResult> GetProcessos()
         {
             var processos = await dbContext.Set<Processo>().Include(p => p.Historicos).AsNoTracking().OrderByDescending(p => p.Id).ToListAsync();
+            return Ok(processos);
+        }
 
-
+        [HttpGet("processoshistoricos")]
+        public async Task<IActionResult> GetProcessosHistoricos()
+        {
+            var processos = await (
+                from p in dbContext.Set<Processo>()
+                join h in dbContext.Set<Historico>()
+                    on p.Id equals h.ProcessoId into historicosGroup
+                select new Processo
+                {
+                    Id = p.Id,
+                    NumeroProcesso = p.NumeroProcesso,
+                    Historicos = historicosGroup
+                        .OrderByDescending(x => x.Id)
+                        .ToList()
+                }
+            )
+            .AsNoTracking()
+            .OrderByDescending(p => p.Id)
+            .ToListAsync();
+            
             return Ok(processos);
         }
 
