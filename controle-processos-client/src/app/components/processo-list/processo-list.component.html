@@ -1,0 +1,162 @@
+<div class="min-h-screen bg-gray-100 p-8">
+  <!-- Componentes de Feedback -->
+  <app-alert-message [alert]="messageAlert"></app-alert-message>
+  <app-confirmation-dialog [dialog]="confirmDialog"></app-confirmation-dialog>
+
+  <!-- Cabeçalho e Botão Novo -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">Controle de Processos Judiciais</h1>
+    <button (click)="openForm()"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition">
+      + Novo Processo
+    </button>
+  </div>
+
+  <!-- Formulário de Processo -->
+  <app-processo-form
+    [showForm]="showForm"
+    [form]="processoForm"
+    [statusOptions]="statusOptions"
+    [editingId]="editingId"
+    [loading]="loading"
+    (submitted)="submitForm()"
+    (cancelled)="closeForm()">
+  </app-processo-form>
+
+  <!-- Filtros e Busca -->
+  <app-processo-filters
+    [searchTermValue]="searchTerm"
+    [filterStatusValue]="filterStatus"
+    [statusOptions]="statusOptions"
+    (searchTermChange)="searchTerm = $event"
+    (filterStatusChange)="filterStatus = $event; resetProcessoPaginacao()"
+    (refresh)="loadProcessos()">
+  </app-processo-filters>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-8">
+    <p class="text-gray-600 text-lg">Carregando...</p>
+  </div>
+
+  <!-- Tabela de Processos -->
+  <app-processo-table
+    *ngIf="!loading && processosPaginados.length > 0"
+    [processos]="processosPaginados"
+    [statusOptions]="statusOptions"
+    (view)="openDetails($event)"
+    (edit)="openForm($event)"
+    (delete)="deleteProcesso($event)"
+    (statusChange)="updateStatus($event)">
+  </app-processo-table>
+
+  <!-- Paginação de Processos -->
+  <app-processo-pagination
+    *ngIf="!loading && filteredProcessos.length > 0"
+    [paginaAtual]="processoPaginaAtual"
+    [paginasTotais]="processoPaginasTotais"
+    [total]="processosTotal"
+    [itensPorPagina]="processoItensPorPagina"
+    (pageChange)="goToProcessoPage($event)">
+  </app-processo-pagination>
+
+  <!-- Mensagem de Vazio -->
+  <div *ngIf="!loading && filteredProcessos.length === 0" class="bg-white rounded-lg shadow-md p-12 text-center">
+    <p class="text-gray-600 text-xl">Nenhum processo encontrado.</p>
+  </div>
+
+  <!-- Modal de Detalhes -->
+  <div *ngIf="showDetails && selectedProcesso"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-6xl my-8 p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Detalhes do Processo</h2>
+        <button (click)="closeDetails()" class="text-gray-500 hover:text-gray-700 text-2xl">
+          ✕
+        </button>
+      </div>
+
+      <!-- Dados Principais -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div>
+          <label class="block text-gray-700 font-semibold">Número do Processo</label>
+          <p class="text-gray-600">{{ selectedProcesso.numeroProcesso }}</p>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Status</label>
+          <p class="text-gray-600">{{ selectedProcesso.status }}</p>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Autor</label>
+          <p class="text-gray-600">{{ selectedProcesso.autor }}</p>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Réu</label>
+          <p class="text-gray-600">{{ selectedProcesso.reu }}</p>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Data de Ajuizamento</label>
+          <p class="text-gray-600">{{ formatDate(selectedProcesso.dataAjuizamento) }}</p>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Data de Inclusão</label>
+          <p class="text-gray-600">{{ formatDate(selectedProcesso.dataInclusao) }}</p>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <label class="block text-gray-700 font-semibold mb-2">Descrição</label>
+        <p class="text-gray-600 whitespace-pre-wrap">{{ selectedProcesso.descricao || 'Sem descrição' }}</p>
+      </div>
+
+      <!-- Históricos -->
+      <div>
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">Históricos</h3>
+          <button (click)="openHistoricoForm()"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition text-sm">
+            + Novo Histórico
+          </button>
+        </div>
+
+        <!-- Formulário de Histórico -->
+        <app-historico-form
+          [showForm]="showHistoricoForm"
+          [form]="historicoForm"
+          [editingHistoricoId]="editingHistoricoId"
+          [loading]="loading"
+          (submitted)="submitHistoricoForm()"
+          (cancelled)="closeHistoricoForm()">
+        </app-historico-form>
+
+        <!-- Tabela de Históricos -->
+        <app-historico-table
+          *ngIf="selectedProcesso.historicos && historicosPaginados.length > 0"
+          [historicos]="historicosPaginados"
+          (edit)="openHistoricoForm($event)"
+          (delete)="deleteHistorico($event)">
+        </app-historico-table>
+
+        <!-- Paginação de Históricos -->
+        <app-historico-pagination
+          *ngIf="selectedProcesso.historicos && selectedProcesso.historicos.length > 0"
+          [paginaAtual]="historicoPaginaAtual"
+          [paginasTotais]="historicosPaginasTotais"
+          [total]="selectedProcesso.historicos.length"
+          [itensPorPagina]="historicoItensPorPagina"
+          (pageChange)="goToHistoricoPage($event)">
+        </app-historico-pagination>
+
+        <p *ngIf="!selectedProcesso.historicos || selectedProcesso.historicos.length === 0" class="text-gray-500 italic">
+          Nenhum histórico registrado
+        </p>
+      </div>
+
+      <div class="flex gap-3 justify-end mt-8">
+        <button (click)="closeDetails()"
+          class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,12 @@ namespace Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> CreateHistorico([FromBody]CreateHistoricoRequest request)
         {
+            var processoExists = await dbContext.Set<Processo>().AnyAsync(p => p.Id == request.ProcessoId);
+            if (!processoExists)
+            {
+                return BadRequest("O processo informado não existe");
+            }
+
             Historico historico = new Historico();
 
             historico.ProcessoId = request.ProcessoId;

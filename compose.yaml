@@ -11,21 +11,25 @@ services:
       - "5432:5432"
 
   api:
-    build: ./controle-processos-server/src/Api
+    build:
+      context: ./controle-processos-server
+      dockerfile: ./src/Api/Dockerfile
     depends_on:
       - postgres
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=controleProcessos;Username=postgres;Password=postgres
     ports:
       - "5000:80"
 
-  # frontend:
-  #   build: ./controle-processos-frontend
-  #   ports:
-  #     - "4200:80"
-  #   depends_on:
-  #     - api
+  frontend:
+    build:
+      context: ./controle-processos-client
+      dockerfile: ./Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "4200:80"
 
 volumes:
   pgdata:

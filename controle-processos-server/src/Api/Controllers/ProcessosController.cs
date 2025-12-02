@@ -50,6 +50,21 @@ namespace Api.Controllers
             return Ok(processos);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProcessoById([FromRoute] long id)
+        {
+            var processo = await dbContext.Set<Processo>()
+                .Include(p => p.Historicos)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (processo is null)
+            {
+                return NotFound("O Processo informado não existe");
+            }
+
+            return Ok(processo);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProcesso([FromRoute] long id, [FromBody] UpdateProcessoRequest request)
         {

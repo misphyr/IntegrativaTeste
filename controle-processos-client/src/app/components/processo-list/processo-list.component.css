@@ -1,0 +1,4 @@
+/* Estilos globais do componente */
+:host {
+  display: block;
+}
