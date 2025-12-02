@@ -1,12 +1,12 @@
 # Controle de Processos Judiciais
 
-Este é um projeto completo de gerenciamento de processos judiciais com backend em .NET/C# e frontend em Angular.
+Este é um projeto completo de gerenciamento de processos judiciais com backend em .NET 9/C# e frontend em Angular, containerizado com Docker.
 
 ## 📋 Estrutura do Projeto
 
 ```
 TesteIntegrativa/
-├── controle-processos-server/     # Backend .NET/C#
+├── controle-processos-server/     # Backend .NET 9
 │   ├── src/
 │   │   └── Api/
 │   │       ├── Controllers/
@@ -36,21 +36,41 @@ TesteIntegrativa/
 
 ## 🚀 Início Rápido
 
-### Opção 1: Com Docker Compose (Recomendado)
+### ⚙️ Pré-requisitos
+
+Você precisa ter instalado:
+- **Docker** (versão 20.10+) - [Download](https://www.docker.com/products/docker-desktop)
+- **Docker Compose** (versão 2.0+)
+
+### Opção 1: Com Docker Compose (Recomendado) ✨
+
+Na raiz do projeto, execute:
 
 ```bash
-# Na raiz do projeto
-docker compose up
+docker-compose up -d
 ```
 
-Isso iniciará:
-- Backend em `http://localhost:5000`
-- Frontend em `http://localhost:4200`
-- Banco de dados PostgreSQL
+Este comando irá:
+- ✅ Criar e iniciar o banco de dados PostgreSQL
+- ✅ Compilar e iniciar a API .NET 9
+- ✅ Compilar e iniciar o cliente Angular
+- ✅ Criar volumes para persistência de dados
 
-### Opção 2: Manualmente
+**Acessar a aplicação:**
+- 🌐 Frontend (Angular): http://localhost:4200
+- 📡 API (.NET): http://localhost:5000
+- 🗄️ Banco de Dados (PostgreSQL): localhost:5432
 
-#### Backend
+**Credenciais do Banco:**
+```
+Usuário: postgres
+Senha: postgres
+Banco: controleProcessos
+```
+
+### Opção 2: Execução Manual (Desenvolvimento)
+
+#### Backend .NET
 
 ```bash
 cd controle-processos-server
@@ -60,7 +80,7 @@ dotnet run
 
 Backend rodará em `http://localhost:5000`
 
-#### Frontend
+#### Frontend Angular
 
 ```bash
 cd controle-processos-client
@@ -222,43 +242,72 @@ npm test
 - [Backend README](./controle-processos-server/README.md)
 - [Frontend README](./controle-processos-client/README.md)
 
-## 🐛 Troubleshooting
+## 🔗 Links Úteis
 
-### Erro de conexão com banco de dados
-- Verifique se PostgreSQL está rodando
-- Confirme as credenciais em `appsettings.json`
+- [Docker Documentation](https://docs.docker.com/)
+- [Docker Compose Documentation](https://docs.docker.com/compose/)
+- [.NET 9 Documentation](https://learn.microsoft.com/dotnet/)
+- [Angular Documentation](https://angular.io/docs)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Entity Framework Core](https://learn.microsoft.com/ef/core/)
 
-### Frontend não conecta ao backend
-- Verifique se backend está rodando em `http://localhost:5000`
-- Confirme CORS habilitado no backend
+## 📝 Notas
 
-### Porta já em uso
-```bash
-# Windows
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
-
-# Linux/Mac
-lsof -i :5000
-kill -9 <PID>
-```
-
-## 📞 Suporte
-
-Para dúvidas ou problemas, verifique:
-1. Os READMEs específicos de cada projeto
-2. Os logs do Docker: `docker compose logs`
-3. O console do navegador (frontend)
-4. O output do terminal (backend)
-
-## 📄 Licença
-
-Projeto educacional - 2025
-
-## 👨‍💻 Autor
-
-Desenvolvido como solução do desafio de Controle de Processos Judiciais.
+- A primeira execução pode levar alguns minutos enquanto as imagens Docker são construídas
+- Os dados do banco de dados são persistidos no volume `pgdata` do Docker
+- Para desenvolvimento, você pode executar manualmente sem Docker (veja **Opção 2**)
 
 ---
 
-**Última atualização**: 30 de Novembro de 2025
+**Desenvolvido com ❤️ para gerenciamento de processos judiciais**
+
+## 🔄 Gerenciando Containers com Docker
+
+### Comandos Essenciais
+
+**Visualizar logs:**
+```bash
+# Todos os serviços
+docker-compose logs -f
+
+# Serviço específico
+docker-compose logs -f api
+docker-compose logs -f frontend
+docker-compose logs -f postgres
+```
+
+**Verificar status:**
+```bash
+docker-compose ps
+```
+
+**Parar a aplicação:**
+```bash
+# Parar mas manter dados
+docker-compose stop
+
+# Parar e remover containers
+docker-compose down
+
+# Parar e remover tudo (incluindo banco de dados)
+docker-compose down -v
+```
+
+**Reconstruir imagens:**
+```bash
+# Reconstruir sem cache
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+**Acessar shell de um container:**
+```bash
+# API .NET
+docker-compose exec api bash
+
+# Frontend Node
+docker-compose exec frontend bash
+
+# Banco de dados PostgreSQL
+docker-compose exec postgres psql -U postgres -d controleProcessos
+```

@@ -79,33 +79,33 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div>
           <label class="block text-gray-700 font-semibold">Número do Processo</label>
-          <p class="text-gray-600">{{ selectedProcesso.numeroProcesso }}</p>
+          <p class="text-gray-600 break-words">{{ selectedProcesso.numeroProcesso }}</p>
         </div>
         <div>
           <label class="block text-gray-700 font-semibold">Status</label>
-          <p class="text-gray-600">{{ selectedProcesso.status }}</p>
+          <p class="text-gray-600 break-words">{{ selectedProcesso.status | processoStatus }}</p>
         </div>
         <div>
           <label class="block text-gray-700 font-semibold">Autor</label>
-          <p class="text-gray-600">{{ selectedProcesso.autor }}</p>
+          <p class="text-gray-600 break-words line-clamp-3">{{ selectedProcesso.autor }}</p>
         </div>
         <div>
           <label class="block text-gray-700 font-semibold">Réu</label>
-          <p class="text-gray-600">{{ selectedProcesso.reu }}</p>
+          <p class="text-gray-600 break-words line-clamp-3">{{ selectedProcesso.reu }}</p>
         </div>
         <div>
           <label class="block text-gray-700 font-semibold">Data de Ajuizamento</label>
-          <p class="text-gray-600">{{ formatDate(selectedProcesso.dataAjuizamento) }}</p>
+          <p class="text-gray-600 break-words">{{ formatDate(selectedProcesso.dataAjuizamento) }}</p>
         </div>
         <div>
           <label class="block text-gray-700 font-semibold">Data de Inclusão</label>
-          <p class="text-gray-600">{{ formatDate(selectedProcesso.dataInclusao) }}</p>
+          <p class="text-gray-600 break-words">{{ formatDate(selectedProcesso.dataInclusao) }}</p>
         </div>
       </div>
 
       <div class="mb-8">
         <label class="block text-gray-700 font-semibold mb-2">Descrição</label>
-        <p class="text-gray-600 whitespace-pre-wrap">{{ selectedProcesso.descricao || 'Sem descrição' }}</p>
+        <p class="text-gray-600 whitespace-pre-wrap break-words max-h-48 overflow-y-auto bg-gray-50 p-4 rounded border border-gray-200">{{ selectedProcesso.descricao || 'Sem descrição' }}</p>
       </div>
 
       <!-- Históricos -->
